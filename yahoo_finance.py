@@ -15,15 +15,8 @@ def get_price(symbol):
     res = conn.getresponse()
     data = json.loads(res.read())
     meta = data["chart"]["result"][0]["meta"]
-    regular_period = meta["currentTradingPeriod"]["regular"]
-    (regular_time_start, regular_time_end) = (regular_period["start"], regular_period["end"])
 
-    # utc now
-    now = int(time())
-    if now > int(regular_time_start) and now < int(regular_time_end):
-        return meta["regularMarketPrice"]
-    else:
-        return meta["previousClose"]
+    return meta["regularMarketPrice"]
 
 
 def get_yfinance_prices(symbols):
