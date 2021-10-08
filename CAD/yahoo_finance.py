@@ -38,7 +38,7 @@ def get_yfinance_prices(_symbols):
 
         return ",".join([str(results[s]) for s in results])
     except Exception as e:
-        return str(e)
+        return ",".join(["None"] * len(symbols))
 
 
 if __name__ == "__main__":

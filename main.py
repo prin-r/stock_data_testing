@@ -44,14 +44,19 @@ SYMBOLS_CAD = ["GLXY"]
 # if os.getenv("TWELVEDATA_API_KEY") is None or os.getenv("FINAGE_API_KEY") is None:
 #     raise ValueError("Please setup TWELVEDATA_API_KEY and FINAGE_API_KEY")
 
+
+def parse_to_list(price_str):
+    return price_str.split(",")
+
+
 while True:
     ask_time = int(time.time())
     print("start at ", ask_time)
 
-    twelvedata_prices = usa_twelve(SYMBOLS)
-    finage_prices = usa_finage((SYMBOLS))
-    yfinance_prices = usa_yahoo(SYMBOLS)
-    bb_prices = usa_bb(SYMBOLS)
+    twelvedata_prices = parse_to_list(usa_twelve(SYMBOLS))
+    finage_prices = parse_to_list(usa_finage((SYMBOLS)))
+    yfinance_prices = parse_to_list(usa_yahoo(SYMBOLS))
+    bb_prices = parse_to_list(usa_bb(SYMBOLS))
     # print(twelvedata_prices)
     # print(finage_prices)
     # print(yfinance_prices)
@@ -66,44 +71,37 @@ while True:
     # print(caD_tmx_prices)
     # print(caD_yfinance_prices)
 
-    for symbol in SYMBOLS:
+    for idx, symbol in enumerate(SYMBOLS):
         with open("./reports/" + symbol + ".csv", "a+", encoding="UTF8") as f:
             writer = csv.writer(f)
 
             # header = ["timestamp", "twelvedata", "finage", "yahoo_finance", "bb"]
-            # write the header
             # writer.writerow(header)
 
             # write the data
             data = [
                 ask_time,
-                twelvedata_prices[symbol],
-                finage_prices[symbol],
-                yfinance_prices[symbol],
-                bb_prices[symbol],
+                twelvedata_prices[idx],
+                finage_prices[idx],
+                yfinance_prices[idx],
+                bb_prices[idx],
             ]
             writer.writerow(data)
 
-    for symbol in SYMBOLS_CAD:
+    for idx, symbol in enumerate(SYMBOLS_CAD):
         with open("./reports/" + symbol + ".csv", "a+", encoding="UTF8") as f:
             writer = csv.writer(f)
 
-            cad_bb_prices = cad_bb(SYMBOLS_CAD)
-            cad_finage_prices = cad_finage((SYMBOLS_CAD))
-            caD_tmx_prices = cad_tmx(SYMBOLS_CAD)
-            caD_yfinance_prices = cad_yahoo(SYMBOLS_CAD)
-
             # header = ["timestamp", "bb", "finage", "tmx","yahoo_finance"]
-            # write the header
             # writer.writerow(header)
 
             # write the data
             data = [
                 ask_time,
-                cad_bb_prices[symbol],
-                cad_finage_prices[symbol],
-                caD_tmx_prices[symbol],
-                caD_yfinance_prices[symbol],
+                cad_bb_prices,
+                cad_finage_prices,
+                caD_tmx_prices,
+                caD_yfinance_prices,
             ]
             writer.writerow(data)
 

@@ -15,22 +15,25 @@ params = (
 
 
 def get_bb_price(symbols):
-    r = requests.get(
-        "https://www.bloomberg.com/markets2/api/datastrip/{}".format(
-            ",".join([s + ":US" for s in symbols])
-        ),
-        headers=headers,
-        params=params,
-    )
-    r.raise_for_status()
+    try:
+        r = requests.get(
+            "https://www.bloomberg.com/markets2/api/datastrip/{}".format(
+                ",".join([s + ":US" for s in symbols])
+            ),
+            headers=headers,
+            params=params,
+        )
+        r.raise_for_status()
 
-    rj = r.json()
-    pxs = [p["price"] for p in rj]
+        rj = r.json()
+        pxs = [p["price"] for p in rj]
 
-    if len(pxs) != len(symbols):
-        raise Exception("PXS_AND_SYMBOL_LEN_NOT_MATCH")
+        if len(pxs) != len(symbols):
+            raise Exception("PXS_AND_SYMBOL_LEN_NOT_MATCH")
 
-    return ",".join([str(float(px)) for px in pxs])
+        return ",".join([str(float(px)) for px in pxs])
+    except Exception as e:
+        return ",".join(["None"] * len(symbols))
 
 
 if __name__ == "__main__":

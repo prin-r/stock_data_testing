@@ -8,19 +8,22 @@ HEADERS = {"Content-Type": "application/json"}
 
 
 def get_tmx_prices(symbols):
-    symbol = symbols[0]
-    res = requests.post(
-        URL,
-        headers=HEADERS,
-        data=json.dumps(
-            {
-                "operationName": "getQuoteBySymbol",
-                "variables": {"symbol": symbol, "locale": "en"},
-                "query": "query getQuoteBySymbol($symbol: String, $locale: String) {\n  getQuoteBySymbol(symbol: $symbol, locale: $locale) {\n    price\n}\n}\n",
-            }
-        ),
-    )
-    return res.json()["data"]["getQuoteBySymbol"]["price"]
+    try:
+        symbol = symbols[0]
+        res = requests.post(
+            URL,
+            headers=HEADERS,
+            data=json.dumps(
+                {
+                    "operationName": "getQuoteBySymbol",
+                    "variables": {"symbol": symbol, "locale": "en"},
+                    "query": "query getQuoteBySymbol($symbol: String, $locale: String) {\n  getQuoteBySymbol(symbol: $symbol, locale: $locale) {\n    price\n}\n}\n",
+                }
+            ),
+        )
+        return res.json()["data"]["getQuoteBySymbol"]["price"]
+    except Exception as e:
+        return ",".join(["None"] * len(symbols))
 
 
 if __name__ == "__main__":

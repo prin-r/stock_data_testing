@@ -6,16 +6,19 @@ HEADERS = {"Content-Type": "application/json"}
 
 
 def get_finage_price(symbols):
-    payload = {"source": "finage", "symbols": symbols}
-    r = requests.post(URL, headers=HEADERS, json=payload)
-    r.raise_for_status()
+    try:
+        payload = {"source": "finage", "symbols": symbols}
+        r = requests.post(URL, headers=HEADERS, json=payload)
+        r.raise_for_status()
 
-    pxs = r.json()
+        pxs = r.json()
 
-    if len(pxs) != len(symbols):
-        raise Exception("PXS_AND_SYMBOL_LEN_NOT_MATCH")
+        if len(pxs) != len(symbols):
+            raise Exception("PXS_AND_SYMBOL_LEN_NOT_MATCH")
 
-    return ",".join([str(float(px)) for px in pxs])
+        return ",".join([str(float(px)) for px in pxs])
+    except Exception as e:
+        return ",".join(["None"] * len(symbols))
 
 
 if __name__ == "__main__":
